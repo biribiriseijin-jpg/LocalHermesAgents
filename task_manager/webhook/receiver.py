@@ -10,10 +10,7 @@ Webhook Receiver
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
-import sys
-import os
-upper_path = os.path.dirname(os.path.abspath(__file__)) + '../'
-load_dotenv(upper_path + '.env')
+from task_manager.config import WEBHOOK_SECRET
 
 
 app = FastAPI()

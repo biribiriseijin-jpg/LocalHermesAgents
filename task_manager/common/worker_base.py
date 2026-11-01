@@ -2,16 +2,12 @@
 共通Worker処理
 """
 
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '../')
-
-from common.redis_utils import (
+from task_manager.common.redis_utils import (
     redis_client,
     create_consumer_group,
 )
 
-from common.webhook import (
+from task_manager.common.webhook import (
     send_webhook,
 )
 

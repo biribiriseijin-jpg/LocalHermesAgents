@@ -13,11 +13,7 @@ from datetime import datetime, UTC
 import redis
 from fastmcp import FastMCP
 
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '../')
-
-from config import (
+from task_manager.config import (
     REDIS_HOST,
     REDIS_PORT,
     VALID_TASK_TYPES,

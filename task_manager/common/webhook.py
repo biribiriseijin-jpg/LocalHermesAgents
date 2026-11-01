@@ -4,14 +4,7 @@ Webhook送信共通処理
 
 import requests
 from dotenv import load_dotenv
-import sys
-import os
-upper_path = os.path.dirname(os.path.abspath(__file__)) + '../'
-sys.path.append(upper_path)
-
-from config import WEBHOOK_URL
-
-load_dotenv(upper_path + '.env')
+from task_manager.config import WEBHOOK_URL, WEBHOOK_SECRET
 
 headers = {
     "X-Webhook-Secret":
