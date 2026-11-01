@@ -56,16 +56,24 @@ class WorkerBase:
         )
 
         while True:
-
-            messages = redis_client.xreadgroup(
-                groupname=self.group_name,
-                consumername=self.consumer_name,
-                streams={
-                    self.stream_name: ">"
-                },
-                count=1,
-                block=5000,
-            )
+            try:
+                messages = redis_client.xreadgroup(
+                    groupname=self.group_name,
+                    consumername=self.consumer_name,
+                    streams={
+                        self.stream_name: ">"
+                    },
+                    count=1,
+                    block=5000,
+                )
+            except Exception as e:
+                if type(e).__name__ == "TimeoutError":
+                    continue
+                else:
+                    print(
+                        f"[Worker Error] {e}"
+                    )
+                    exit(1)
 
             if not messages:
                 continue
