@@ -17,5 +17,5 @@ VALID_TASK_TYPES = {
 
 # Webhook URL
 WEBHOOK_URL = (
-    "http://127.0.0.1:8000/task_completed"
+    "http://localhost:8644/webhooks/task_manager_completed"
 )

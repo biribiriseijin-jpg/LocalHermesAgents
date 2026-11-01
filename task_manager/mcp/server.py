@@ -8,7 +8,7 @@ Task Manager MCP Server
 """
 
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 
 import redis
 from fastmcp import FastMCP
@@ -118,6 +118,7 @@ def create_task(
             - search
             - research
             - build
+            - dummy
 
         prompt:
             Complete description of the work to perform.
@@ -139,6 +140,7 @@ def create_task(
     - Expected execution time exceeds a few seconds.
     - Specialized worker processing is required.
     - The task can continue independently of the current conversation.
+    - Instructed by the user
 
     Prefer direct responses whenever:
     - The answer can be produced immediately.
@@ -172,7 +174,7 @@ def create_task(
         "session_id": session_id,
         "task_type": task_type,
         "prompt": prompt,
-        "created_at": datetime.utcnow().isoformat()
+        "created_at": datetime.now(UTC).isoformat()
     }
 
     # ------------------------------

@@ -3,6 +3,7 @@ Dummy Worker
 """
 
 import time
+from datetime import datetime, UTC
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
@@ -22,11 +23,15 @@ class DummyWorker(
     ):
 
         print(
-            f"[Dummy] Start {task['task_id']}"
+            f"[Dummy] Start {task['task_id']} at {datetime.now(UTC).isoformat()}"
         )
 
         # ダミー処理
-        time.sleep(20)
+        time.sleep(60)
+
+        print(
+            f"[Dummy] Completed {task['task_id']} at {datetime.now(UTC).isoformat()}"
+        )
 
         return {
             "task_id":
@@ -46,9 +51,9 @@ class DummyWorker(
 if __name__ == "__main__":
 
     worker = DummyWorker(
-        stream_name="Dummy_stream",
-        group_name="Dummy_workers",
-        consumer_name="Dummy_1",
+        stream_name="dummy_stream",
+        group_name="dummy_workers",
+        consumer_name="dummy_1",
     )
 
     worker.run()
