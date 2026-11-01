@@ -3,11 +3,20 @@ Webhook送信共通処理
 """
 
 import requests
+from dotenv import load_dotenv
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
+upper_path = os.path.dirname(os.path.abspath(__file__)) + '../'
+sys.path.append(upper_path)
 
 from config import WEBHOOK_URL
+
+load_dotenv(upper_path + '.env')
+
+headers = {
+    "X-Webhook-Secret":
+        WEBHOOK_SECRET
+}
 
 
 def send_webhook(payload: dict):
@@ -25,6 +34,7 @@ def send_webhook(payload: dict):
         response = requests.post(
             WEBHOOK_URL,
             json=payload,
+            headers=headers,
             timeout=5
         )
 

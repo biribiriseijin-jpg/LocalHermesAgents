@@ -6,7 +6,7 @@ import time
 from datetime import datetime, UTC
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '../')
 
 from common.worker_base import (
     WorkerBase,
