@@ -62,27 +62,83 @@ def create_task(
 ) -> dict:
 
     """
-    非同期タスクをキューへ登録する。
-    
-    Parameters
-    ----------
-    task_type:
-        coding / search / research / build
-        
-    prompt:
-        Workerに渡すタスク内容
-        
-    session_id:
-        Hermes側の会話識別子
-        将来的に履歴管理で利用
+    Create a background task for long-running work.
 
-    Returns
-    -------
-    task_id:
-        発行されたID
+    Use this tool when the request requires substantial processing,
+    external investigation, code generation, repository analysis,
+    build execution, or any task that may take more than a few seconds.
 
-    status:
-        queued
+    Typical use cases:
+    - Writing or refactoring code
+    - Reviewing large codebases
+    - Research tasks
+    - Web searches and information gathering
+    - Build or test execution
+    - Multi-step analysis
+
+    Do NOT use this tool for:
+    - Normal conversation
+    - Simple explanations
+    - Short answers that can be generated immediately
+    - Questions that can be answered directly from existing context
+
+    After creating a task:
+    - The task will be executed asynchronously.
+    - A task_id will be returned immediately.
+    - Results will become available later through the task system.
+    - Do not wait for task completion before responding to the user.
+
+    Important:
+    When a user requests code generation,
+    repository analysis,
+    research,
+    search,
+    build,
+    test,
+    or automation tasks,
+    prefer create_task instead of performing the work directly.
+
+    The user experience should be:
+    1. Create background task.
+    2. Inform the user that the task has been queued.
+    3. Continue the conversation without blocking.
+
+    This tool exists to keep interactive conversations responsive while
+    delegating expensive work to background workers.
+
+    Parameters:
+        task_type:
+            Type of work to perform.
+            Valid values:
+            - coding
+            - search
+            - research
+            - build
+
+        prompt:
+            Complete description of the work to perform.
+            Include all relevant requirements and constraints.
+
+        session_id:
+            Identifier for the current conversation session.
+
+    Returns:
+        task_id:
+            Unique identifier for the queued task.
+
+        status:
+            Queue status, usually 'queued'.
+
+    Decision guideline:
+
+    Use create_task whenever:
+    - Expected execution time exceeds a few seconds.
+    - Specialized worker processing is required.
+    - The task can continue independently of the current conversation.
+
+    Prefer direct responses whenever:
+    - The answer can be produced immediately.
+    - No external processing is required.
     """
 
     # ------------------------------

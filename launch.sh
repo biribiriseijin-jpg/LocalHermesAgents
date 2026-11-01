@@ -12,12 +12,17 @@ tmux new-window -t hermes-dev -n llama.cpp \
 # MCP server start
 echo "MCP server start"
 tmux new-window -t hermes-dev -n MCP \
-  "cd ~/hermes_agent/task_manager && uv run server.py"
+  "cd ~/LocalHermesAgents/task_manager && uv run server.py"
 
 # worker start
 echo "worker start"
 tmux new-window -t hermes-dev -n worker \
-  "cd ~/hermes_agent/task_manager/workers && uv run coding_worker.py"
+  "cd ~/LocalHermesAgents/task_manager/workers && uv run coding_worker.py"
+
+# Webhook Receiver start
+echo "Webhook Receiver start"
+tmux new-window -t hermes-dev -n receiver \
+  "cd ~/LocalHermesAgents/task_manager/webhook && uv run uvicorn receiver:app --host 0.0.0.0 --port 8>
 
 # hermes dashboard start
 echo "Herms dashboard start"
@@ -37,8 +42,4 @@ tmux new-window -t hermes-dev -n top \
 # GPU Resorce Monitor start
 echo "GPU Resorce Monitor start"
 tmux new-window -t hermes-dev -n nvidia-smi \
-  "watch -n 1 nvidia-smi"
-
-
-tmux attach -t hermes-dev
-
+  "nvitop"
