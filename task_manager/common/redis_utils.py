@@ -7,6 +7,9 @@ import redis
 from task_manager.config import (
     REDIS_HOST,
     REDIS_PORT,
+    SOCKET_CONNECT_TIMEOUT,
+    SOCKET_TIMEOUT,
+    RETRY_ON_TIMEOUT,
 )
 
 pool = redis.ConnectionPool(
@@ -16,7 +19,10 @@ pool = redis.ConnectionPool(
 )
 
 redis_client = redis.Redis(
-    connection_pool=pool
+    connection_pool=pool,
+    socket_connect_timeout=SOCKET_CONNECT_TIMEOUT,
+    socket_timeout=SOCKET_TIMEOUT,
+    retry_on_timeout=RETRY_ON_TIMEOUT,
 )
 
 

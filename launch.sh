@@ -19,11 +19,6 @@ echo "worker start"
 tmux new-window -t hermes-dev -n worker \
   "cd ~/LocalHermesAgents && uv run python -m task_manager.workers.dummy_worker"
 
-# Webhook Receiver start
-echo "Webhook Receiver start"
-tmux new-window -t hermes-dev -n receiver \
-  "cd ~/LocalHermesAgents && uv run uvicorn task_manager.webhook.receiver:app --host 127.0.0.1 --port 6198"
-
 # hermes dashboard start
 echo "Herms dashboard start"
 tmux new-window -t hermes-dev -n dashboard \

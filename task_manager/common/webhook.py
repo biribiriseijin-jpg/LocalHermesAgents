@@ -3,7 +3,12 @@ Webhook送信共通処理
 """
 
 import requests
-from task_manager.config import WEBHOOK_URL, WEBHOOK_SECRET
+from task_manager.config import (
+    WEBHOOK_URL,
+    WEBHOOK_SECRET,
+    WEBHOOK_TIMEOUT,
+    WEBHOOK_RETRY_COUNT,
+)
 
 
 def send_webhook(payload: dict):
@@ -21,13 +26,13 @@ def send_webhook(payload: dict):
         response = requests.post(
             WEBHOOK_URL,
             json=payload,
-            timeout=5
+            timeout=WEBHOOK_TIMEOUT,
         )
 
         response.raise_for_status()
 
         print(
-            f"[Webhook] sent task={payload.get('task_id')} /n payload={payload}"
+            f"[Webhook] sent task={payload.get('task_id')} \n payload={payload}"
         )
 
     except Exception as e:

@@ -16,7 +16,17 @@ from fastmcp import FastMCP
 from task_manager.config import (
     REDIS_HOST,
     REDIS_PORT,
-    VALID_TASK_TYPES,
+    TASK_TYPES,
+    TASK_STATUS_QUEUED,
+)
+
+from task_manager.storage.models import (
+    Task
+)
+
+from task_manager.storage.task_repository import (
+    create_task_record,
+    task_exists,
 )
 
 # --------------------------------------------------
@@ -58,9 +68,9 @@ def get_stream_name(task_type: str) -> str:
 def create_task(
     task_type: str,
     prompt: str,
+    chat_id: str,
+    thread_id: str = "none",
     session_id: str = "default",
-    chat_id: str = "none",
-    thread_id: str = "none"
 ) -> dict:
 
     """
@@ -152,7 +162,7 @@ def create_task(
     # 入力チェック
     # ------------------------------
 
-    if task_type not in VALID_TASK_TYPES:
+    if task_type not in TASK_TYPES:
         return {
             "status": "error",
             "message": (
@@ -160,11 +170,39 @@ def create_task(
             )
         }
 
+
     # ------------------------------
-    # タスクID生成
+    # タスクID生成、タイムスタンプ生成
     # ------------------------------
 
     task_id = str(uuid.uuid4())
+    created_at = datetime.now(UTC).isoformat()
+
+
+    # ------------------------------
+    # SQLiteへ登録
+    # ------------------------------
+
+    task = Task(
+        task_id=task_id,
+
+        session_id=session_id,
+        chat_id=chat_id,
+        thread_id=thread_id,
+
+        task_type=task_type,
+
+        status=TASK_STATUS_QUEUED,
+
+        prompt=prompt,
+
+        created_at=created_at,
+    )
+
+    create_task_record(
+        task
+    )
+
 
     # ------------------------------
     # Redisへ保存するレコード
@@ -173,20 +211,20 @@ def create_task(
     payload = {
         "task_id": task_id,
         "session_id": session_id,
+        "chat_id": chat_id,
+        "thread_id": thread_id,
         "task_type": task_type,
         "prompt": prompt,
-        "created_at": datetime.now(UTC).isoformat(),
-        "deliver": {
-            "chat_id": chat_id,
-            "thread_id": thread_id
-        }
+        "created_at": created_at,
     }
+
 
     # ------------------------------
     # Stream選択
     # ------------------------------
 
     stream_name = get_stream_name(task_type)
+
 
     # ------------------------------
     # Redis Streamsへ投入
@@ -197,15 +235,17 @@ def create_task(
         payload
     )
 
+
     # ------------------------------
     # Hermesへ返却
     # ------------------------------
 
     return {
         "task_id": task_id,
-        "status": "queued",
+        "status": TASK_STATUS_QUEUED,
         "stream": stream_name
     }
+
 
 # --------------------------------------------------
 # エントリポイント
