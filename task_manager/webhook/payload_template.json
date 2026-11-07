@@ -1,0 +1,10 @@
+{
+    "task_id": "dummy_task_id",
+    "task_type": "dummy",
+    "status": "completed",
+    "summary": "Dummy task completed",
+    "deliver": {
+        "chat_id": 1566364845044006964,
+        "thread_id": 1568434912585977949
+    }
+}

@@ -42,6 +42,12 @@ class DummyWorker(
 
             "summary":
                 "Dummy task completed",
+
+            "deliver":
+                {
+                    "chat_id": task["deliver"]["chat_id"],
+                    "thread_id": task["deliver"]["thread_id"]
+                }
         }
 
 

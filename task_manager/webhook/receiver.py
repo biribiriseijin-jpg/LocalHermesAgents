@@ -9,7 +9,6 @@ Webhook Receiver
 
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel
-from dotenv import load_dotenv
 from task_manager.config import WEBHOOK_SECRET
 
 

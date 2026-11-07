@@ -58,7 +58,9 @@ def get_stream_name(task_type: str) -> str:
 def create_task(
     task_type: str,
     prompt: str,
-    session_id: str = "default"
+    session_id: str = "default",
+    chat_id: str = "none",
+    thread_id: str = "none"
 ) -> dict:
 
     """
@@ -88,6 +90,17 @@ def create_task(
     - Results will become available later through the task system.
     - Do not wait for task completion before responding to the user.
 
+    Decision guideline:
+        Use create_task whenever:
+        - Expected execution time exceeds a few seconds.
+        - Specialized worker processing is required.
+        - The task can continue independently of the current conversation.
+        - Instructed by the user
+    
+        Prefer direct responses whenever:
+        - The answer can be produced immediately.
+        - No external processing is required.
+
     Important:
     When a user requests code generation,
     repository analysis,
@@ -97,11 +110,6 @@ def create_task(
     test,
     or automation tasks,
     prefer create_task instead of performing the work directly.
-
-    The user experience should be:
-    1. Create background task.
-    2. Inform the user that the task has been queued.
-    3. Continue the conversation without blocking.
 
     This tool exists to keep interactive conversations responsive while
     delegating expensive work to background workers.
@@ -122,6 +130,15 @@ def create_task(
 
         session_id:
             Identifier for the current conversation session.
+        
+        chat_id:
+            Current Discord channel identifier.
+            Always pass the channel where the user initiated the task.
+
+        thread_id:
+            Current Discord thread identifier.
+            If the conversation is inside a thread, pass the thread ID.
+            Otherwise use an empty string.
 
     Returns:
         task_id:
@@ -129,18 +146,6 @@ def create_task(
 
         status:
             Queue status, usually 'queued'.
-
-    Decision guideline:
-
-    Use create_task whenever:
-    - Expected execution time exceeds a few seconds.
-    - Specialized worker processing is required.
-    - The task can continue independently of the current conversation.
-    - Instructed by the user
-
-    Prefer direct responses whenever:
-    - The answer can be produced immediately.
-    - No external processing is required.
     """
 
     # ------------------------------
@@ -170,7 +175,11 @@ def create_task(
         "session_id": session_id,
         "task_type": task_type,
         "prompt": prompt,
-        "created_at": datetime.now(UTC).isoformat()
+        "created_at": datetime.now(UTC).isoformat(),
+        "deliver": {
+            "chat_id": chat_id,
+            "thread_id": thread_id
+        }
     }
 
     # ------------------------------

@@ -3,13 +3,7 @@ Webhook送信共通処理
 """
 
 import requests
-from dotenv import load_dotenv
 from task_manager.config import WEBHOOK_URL, WEBHOOK_SECRET
-
-headers = {
-    "X-Webhook-Secret":
-        WEBHOOK_SECRET
-}
 
 
 def send_webhook(payload: dict):
@@ -27,14 +21,13 @@ def send_webhook(payload: dict):
         response = requests.post(
             WEBHOOK_URL,
             json=payload,
-            headers=headers,
             timeout=5
         )
 
         response.raise_for_status()
 
         print(
-            f"[Webhook] sent task={payload.get('task_id')}"
+            f"[Webhook] sent task={payload.get('task_id')} /n payload={payload}"
         )
 
     except Exception as e:
